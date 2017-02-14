@@ -9,18 +9,15 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 
 export class FormComponent implements OnInit{
-    public availableMethods: Array<string>  = ["GET","PUT","POST","DELETE","PATCH"];
-    public authenticationMethod: Array<string> = ["None","Token","Password"];
-    public submitted:boolean = false;
+    availableMethods: Array<string>  = ["GET","PUT","POST","DELETE","PATCH","HEAD"];
+    authenticationMethod: Array<string> = ["None","Token","Password"];
+    submitted:boolean = false;
+    cform: FormGroup;
     
     constructor(private _fb: FormBuilder) {}
 
-    passwordMatchValidator(){
-	
-    }
-    
-    ngOnInit() {
-	public cform = this._fb.group({
+    buildForm():void{
+	this.cform = this._fb.group({
 	    url:["",[Validators.required,Validators.pattern("https?://.+")]],
 	    method:["GET",Validators.required],
 	    payload:[""],
@@ -31,11 +28,19 @@ export class FormComponent implements OnInit{
 		token:[""]
 	    },this.passwordMatchValidator),
 	    response:[""]
-	});
+	})	
+    };
+    
+    doRequest(){
+	this.submitted = true;
+    }	
+    
+    passwordMatchValidator(){
 	
-	doRequest(){
-	    this.submitted = true;
-	}	
+    }
+    
+    ngOnInit() {
+	this.buildForm();
     }
 
 }

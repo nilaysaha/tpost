@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, JsonpModule } from '@angular/http';
 import { AlertModule } from 'ng2-bootstrap';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
@@ -16,6 +16,7 @@ import { FormComponent } from './form/form.component';
     imports: [
 	BrowserModule,
 	HttpModule,
+	JsonpModule,
 	FormsModule,
 	ReactiveFormsModule,
 	AlertModule.forRoot(),
