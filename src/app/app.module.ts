@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, JsonpModule } from '@angular/http';
 import { AlertModule } from 'ng2-bootstrap';
@@ -7,6 +7,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { FormComponent } from './form/form.component';
+
+//import {crequestService} from './services/crequest/crequest.service';
 
 @NgModule({
     declarations: [
@@ -22,6 +24,7 @@ import { FormComponent } from './form/form.component';
 	AlertModule.forRoot(),
 	NgbModule.forRoot()
     ],
+    schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
     providers: [],
     bootstrap: [AppComponent]
 })

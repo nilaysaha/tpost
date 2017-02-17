@@ -3,12 +3,12 @@ import {BaseRequestOptions,ConnectionBackend,RequestOptions, Request, RequestMet
 import * as Rx from "rxjs/Rx";
 
 
+
+
 @Injectable()
 export class CrequestService{
 
-    constructor(){
-	this.http = Http;
-    }
+    constructor(private http:Http){}
     
     private capitalizeFirstLetter(s:string):string {
 	return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
@@ -20,7 +20,7 @@ export class CrequestService{
     }
 
     private execRequest(request:any):Observable<any> {
-	let myhttp = new this.http();
+	let myhttp = new this.http(request);
 	
 	console.log('executing request with options:',request);
 	console.log('http module details:',myhttp);
@@ -49,7 +49,7 @@ export class CrequestService{
 	    })
 	    .subscribe(
 		x => {
-		    me.execRequest(x);
+		    me.execRequest(x,me.http);
 		},
 		e => {
 		    console.log("error in creating request:",e);
@@ -59,8 +59,32 @@ export class CrequestService{
 		}
 	    )
 	    .dispose()
-    } 
+    }
 
+    request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
+	
+        console.log('request...');
+	
+        return super.request(url, options);        
+    }
+
+
+    get(url: string, options?: RequestOptionsArgs): Observable<Response> {
+
+        console.log('get...');
+
+        return super.get(url, options).catch(err => {
+          console.log('catch');
+          if (err.status === 404) {
+            console.log(' - 401');
+            return super.get('https://contactsapi.apispark.net/v1/companies/', options);
+          } else {
+            console.log(' - other');
+            return Observable.throw(err);
+          }
+        });
+    }
+    
     initRequest(reqParams:any):any {
 	console.log("input reqparams:",JSON.stringify(reqParams,null,4));	
 	this.response = {};
@@ -98,7 +122,7 @@ export class CrequestService{
 
 	console.log("Making request with options:",JSON.stringify(options));
 
-	this.constructObservable(options);
+	this.request(url,options);
     }
         
 

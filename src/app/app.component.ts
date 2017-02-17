@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component,VERSION } from '@angular/core';
+
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,8 @@ import { Component } from '@angular/core';
 
 
 export class AppComponent {
-  title = 'app works!';
+    title = 'Simple Curl Request App';
+    constructor(){
+	console.log('angular version:',VERSION.full);
+    }
 }

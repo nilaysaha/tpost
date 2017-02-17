@@ -1,5 +1,6 @@
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-form',
@@ -9,6 +10,7 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 
 
 export class FormComponent implements OnInit{
+
     availableMethods: Array<string>  = ["GET","PUT","POST","DELETE","PATCH","HEAD"];
     authenticationMethod: Array<string> = ["None","Token","Password"];
     submitted:boolean = false;
