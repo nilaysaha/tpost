@@ -5,7 +5,7 @@ let appPromise = Promise.all([Ioc.create('src/app')])
 
 console.log(appPromise)
 
-// appPromise
-//   .then(() => {
-//     console.log('returned after starting server')
-//   })
+appPromise
+  .then(() => {
+    console.log('returned after starting server')
+  })
