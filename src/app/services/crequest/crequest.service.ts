@@ -1,71 +1,63 @@
 import { Injectable } from '@angular/core';
-import {BaseRequestOptions,ConnectionBackend,RequestOptions, Request, RequestMethod,Response,Headers,Http} from '@angular/http';
-import * as Rx from "rxjs/Rx";
+import {BaseRequestOptions,RequestOptions,RequestOptionsArgs, Request, RequestMethod,Response,Headers,Http,ResponseContentType} from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+//import * as Rx from "rxjs/Rx";
 
 
 @Injectable()
 export class CrequestService{
 
-    constructor(){
-	this.http = Http;
-    }
+    constructor(private http:Http){}
     
     private capitalizeFirstLetter(s:string):string {
 	return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     }
     
-    private extractData(res: Response){
-	let body = res.json();
-	return body.data || { };	
+    private handleError(error: Response| any ){
+	// In a real world app, we might use a remote logging infrastructure
+	let errMsg: string;
+
+	console.error('error in http request:',error);
+	
+	if (error instanceof Response) {
+	    const body = error.json() || '';
+	    const err = body.error || JSON.stringify(body);
+	    errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+	}
+	else
+	{
+	    errMsg = error.message ? error.message : error.toString();
+	}
+	console.error(errMsg);
+	return Observable.throw(errMsg);
     }
 
-    private execRequest(request:any):Observable<any> {
-	let myhttp = new this.http();
-	
-	console.log('executing request with options:',request);
-	console.log('http module details:',myhttp);
-	
-	myhttp.request(request)
-	    .map(res => res.json())
-	    .subscribe(response => {
-		console.log('Response to http request:',response);
-		me.handleResponse(response);
-	    })		
+    private extractData(res: Response){
+	console.log("returned after request.");
+	let body = res.json();
+	console.log("response from remote url:" ,JSON.stringify(body,null,4));
+	return body || { };	
     }
-    
-    
+
     private handleResponse(error:Response| any){
 	console.log('handling response:',error);
     }
-
-    private constructObservable(options){
-	let me = this;
-
-	Rx.Observable
-	    .create(observer => {
-		observer.next(new Request(options));
-		observer.complete();
-		return () => console.log('disposed');
-	    })
-	    .subscribe(
-		x => {
-		    me.execRequest(x);
-		},
-		e => {
-		    console.log("error in creating request:",e);
-		},
-		() => {
-		    console.log('onCompleted')
-		}
-	    )
-	    .dispose()
-    } 
-
-    initRequest(reqParams:any):any {
-	console.log("input reqparams:",JSON.stringify(reqParams,null,4));	
-	this.response = {};
+    
+    private execRequest(request:any): Observable<any> {
+	console.log('executing request with options:',request);
+	console.log('http module details:',this.http);
 	
-	let headers = new Headers({"Content-Type":"application/x-www-form-urlencoded"});
+	return this.http.request(request)
+	    .map(this.extractData)
+            .catch(this.handleError);    
+    }
+    
+    initRequest(reqParams:any):any {
+	console.log("input reqparams:",JSON.stringify(reqParams,null,4));
+	let contentType = reqParams.contentType || 'application/json';
+	let headers = new Headers({"Content-Type":contentType});
 	let auth = reqParams.authentication;
 	let url = reqParams.url;
 	let withCredentials = false;
@@ -87,19 +79,47 @@ export class CrequestService{
 
 	console.log("http method:",RequestMethod[method]);
 	
-	let options: RequestOptions = new RequestOptions({
+	let options: any = {
 	    method: method,
 	    url: url,
 	    headers:headers,
-	    responseType:"",
-	    body:JSON.stringify(reqParams.payload),
-	    withCredentials:withCredentials
-	});
-
+	    body:(reqParams.payload != "")?JSON.parse(reqParams.payload):""
+	};
+	
 	console.log("Making request with options:",JSON.stringify(options));
-
-	this.constructObservable(options);
+	return this.execRequest(new Request(options))
     }
-        
 
+
+    saveReqParams(reqParams:any):void {
+	
+	let saveParams:any = {
+	    method:'POST',
+	    url:'http://localhost:3000/saveRequestParams?url='+reqParams.url+'&method='+reqParams.method,
+	    headers:new Headers({}),
+	    body:JSON.stringify(reqParams.body)
+	};
+	
+	this.execRequest(new Request(saveParams))
+	    .subscribe(
+		response => {
+		    console.log("tried to store the request to db. Response was:",response)
+		},
+		err => {
+		    console.log('error in saving request to mongodb. Error is:',err)
+		}
+	    )
+    }
+    
+
+    fetchUniqueUrls():Observable<any> {
+	let params:any = {
+	    method:'GET',
+	    url:'http://localhost:3000/getUniqueUrls',
+	    headers:new Headers({})
+	}
+
+	return this.execRequest(new Request(params))	
+    }
+    
 }

@@ -8,7 +8,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { FormComponent } from './form/form.component';
 
-//import {crequestService} from './services/crequest/crequest.service';
+import {CrequestService} from './services/crequest/crequest.service';
 
 @NgModule({
     declarations: [
@@ -25,7 +25,7 @@ import { FormComponent } from './form/form.component';
 	NgbModule.forRoot()
     ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-    providers: [],
+    providers: [CrequestService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

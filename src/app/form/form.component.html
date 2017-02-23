@@ -1,12 +1,12 @@
-<div class="container">
+<div class="container" *ngIf="isDataAvailable">
   <div class="row">
-    <div class="col">
+    <div class="col-md-6">
       <div class="card">
 	<div class="card-header">
 	  Form to make a curl request
 	</div>
 	<div class="card-block">
-	  <form [formGroup]="cform" (ngSubmit)="doRequest($event)">
+	  <form [formGroup]="cform" (ngSubmit)="doRequest($event)" autocomplete="on">
 	    <div class="card form-group">
 	      <div class="card-header">
 		Authentication
@@ -38,10 +38,13 @@
 	    </div>
 	    <div class="form-group">
 	      <label for="requestUrl">Request URL</label>
-	      <input formControlName="url" class="form-control" type="url" placeholder="Input the url for curl request" >
+	      <input formControlName="url" class="form-control" type="url" placeholder="Input the url for curl request" list="urlList">
 	      <small [hidden]="cform.controls.url.valid" class="text-danger">
 		Url is required and should be valid.
               </small>
+	      <datalist id="urlList">
+		<option *ngFor="let url of uniqueUrls">{{url}}</option>
+	      </datalist>	      
 	    </div>
 	    <div class="form-group">
 	      <label for="exampleSelect1">Request Type</label>
@@ -52,25 +55,32 @@
 	    <div class="form-group" *ngIf="cform.value.method != 'GET'">
 	      <label for="postpayload">Post PayLoad</label>
 	      <textarea class="form-control" formControlName="payload" rows="3" ></textarea>
+	      <br/>
+	      <input class="form-control" formControlName="contentType" placeholder="content type for payload" list="contentTypes">
+	      <datalist id="contentTypes">
+		<option *ngFor="let ctype of contentTypes">{{ctype}}</option>
+	      </datalist>
 	    </div>
+	    <button type="submit" class="btn btn-primary" [disabled]="cform.status != 'VALID'">Submit</button>
+	    <br/>
+	    <br/>
 	    <div class="alert alert-success" role="alert">
 	      <p>Value: {{ cform.value | json }}</p>
 	      <p>Validation status: {{ cform.status }}</p>
 	      <p>showPayload:{{showPayload}} {{cform.value.method}}</p>
 	    </div>      
-	    <button type="submit" class="btn btn-primary" [disabled]="cform.status != 'VALID'">Submit</button>
 	  </form>
 	</div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-6">
       <div class="card">
 	<div class="card-header">
 	  Response From the Curl Request:
 	</div>
 	<div class="card-block">
 	  <div class="form-group">
-	    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+	    <textarea class="form-control" id="txtbox" formrows="3">{{cform.value.response}}</textarea>
 	  </div>    
 	</div>  
       </div>

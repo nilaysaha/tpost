@@ -7,19 +7,19 @@ import { CrequestService } from './crequest.service';
 
 describe('Service: CrequestService', () => {
 
-    let service;
+    let service: CrequestService;
 
     console.log("inside testcase crequestservice");
 
     beforeEach(() => {
 	TestBed.configureTestingModule({
 	    imports:[HttpModule],
-	    providers:[CrequestService]
-	}));	
-    })
+	    providers: [CrequestService]
+	});
+    });
     
     beforeEach(() => {
-	service = new CrequestService();
+	this.service = new CrequestService();
     });
 
     

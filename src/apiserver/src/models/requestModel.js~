@@ -1,0 +1,25 @@
+'use strict'
+
+exports = module.exports = function(mongoose){
+
+  const Schema = mongoose.Schema;
+  
+  let requestSchema = new Schema({
+    url:  String,
+    method: String,
+    body:   String,
+    authentication:
+    {
+      token:String,
+      username: String,
+      password: String,
+      type:String    
+    }    
+  });
+
+  return mongoose.model('Request', requestSchema);  
+}
+
+
+exports['@singleton'] = true;
+exports['@require'] = ['src/db'];

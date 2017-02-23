@@ -1,0 +1,10 @@
+'use strict';
+
+exports = module.exports = function(passport){
+
+
+  //passport authentication routes
+  server.post('/login',passport.authenticate('local',{successRedirect:'/',failureRedirect:'/login',
+						      failureFlash:"Invalid username and/or password",
+						      successFlash:'Welcome to the App'}));
+  
