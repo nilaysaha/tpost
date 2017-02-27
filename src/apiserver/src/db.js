@@ -2,7 +2,7 @@
 
 exports = module.exports = function(mongoose,fs) {
 
-  const MONGO_URL = 'mongodb://35.157.103.106:27018/tpost'
+  const MONGO_URL = process.env.MONGODB_URL
 
   mongoose.Promise = Promise;
   

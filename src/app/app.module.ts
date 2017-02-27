@@ -9,11 +9,13 @@ import { AppComponent } from './app.component';
 import { FormComponent } from './form/form.component';
 
 import {CrequestService} from './services/crequest/crequest.service';
+import { AuthenticateComponent } from './authenticate/authenticate.component';
 
 @NgModule({
     declarations: [
 	AppComponent,
-	FormComponent
+	FormComponent,
+	AuthenticateComponent
     ],
     imports: [
 	BrowserModule,

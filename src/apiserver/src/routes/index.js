@@ -1,6 +1,6 @@
 'use strict';
 
-exports = module.exports = function(passport,requestLib){
+exports = module.exports = function(passport,requestLib,authenticateLib){
   
   let init = (server) => {
     
@@ -15,9 +15,9 @@ exports = module.exports = function(passport,requestLib){
     server.get('/getUniqueUrls',requestLib.getUniqueUrls)
 
     //authentication routes
-    server.post('/login',passport.authenticate('local',{successRedirect:'/',failureRedirect:'/login',
-							failureFlash:"Invalid username and/or password",
-							successFlash:'Welcome to the App'}));
+    server.post('/login',authenticateLib.login);
+    server.post('/register',authenticateLib.register);
+   
     
   }
   
@@ -26,4 +26,4 @@ exports = module.exports = function(passport,requestLib){
 }
 
 exports['@singleton'] = true;
-exports['@require'] = ['passport','src/routes/requestLib'];
+exports['@require'] = ['passport','src/routes/requestLib','src/routes/authenticate'];
