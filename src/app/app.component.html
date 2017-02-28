@@ -1,11 +1,6 @@
 <div class="container">
-  <app-authenticate></app-authenticate>
+  <app-authenticate  (userUpdated)="handleUserUpdated($event)"></app-authenticate>  
 </div>
-<div class="jumbotron">
-  <div class="container">
-    <h1>{{title}}</h1>
-  </div>
-</div>
-<div class="container">
-  <app-form></app-form>
-</div>
+<router-outlet></router-outlet>
+
+

@@ -17,5 +17,8 @@ export class AuthenticateService {
         this.token = currentUser && currentUser.token;
     }
 
+    isLoggedIn(){
+	return true;
+    }
     
 }

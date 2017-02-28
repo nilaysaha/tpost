@@ -1,4 +1,4 @@
-import { Component,VERSION } from '@angular/core';
+import { Component,VERSION,Input } from '@angular/core';
 
 
 @Component({
@@ -9,8 +9,13 @@ import { Component,VERSION } from '@angular/core';
 
 
 export class AppComponent {
-    title = 'Simple Curl Request App';
+    
     constructor(){
 	console.log('angular version:',VERSION.full);
     }
+
+    handleUserUpdated(){
+	console.log("inside handle user update. Event has been triggered")
+    }
+    
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-exports = module.exports = function(assert,restify,plugins,routes) {
+exports = module.exports = function(assert,restify,plugins,oauthServer,routes) {
 
   const SERVER_PORT = 3000
   const VERSION = '1.0.0'
@@ -10,6 +10,10 @@ exports = module.exports = function(assert,restify,plugins,routes) {
     version: VERSION
   })
 
+  // const model = {}
+  // const oauth = new oauthServer({ model: model });
+  // server.use(oauth.authenticate());
+  
   server.use(plugins.acceptParser(server.acceptable))
   server.use(plugins.queryParser())
   server.use(plugins.bodyParser())
@@ -43,6 +47,6 @@ exports = module.exports = function(assert,restify,plugins,routes) {
 }
 
 exports['@singleton'] = true;
-exports['@require'] = ['assert','restify','restify-plugins','src/routes/index'];
+exports['@require'] = ['assert','restify','restify-plugins','express-oauth-server','src/routes/index'];
 
 

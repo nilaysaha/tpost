@@ -1,6 +1,7 @@
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
+import { FlashMessagesService } from 'angular2-flash-messages';
 
 import {CrequestService} from '../services/crequest/crequest.service';
 
@@ -14,16 +15,22 @@ import {CrequestService} from '../services/crequest/crequest.service';
 
 export class FormComponent {
 
+    title: string = 'Simple Curl Request App';
+    
     availableMethods: Array<string>  = ["GET","PUT","POST","DELETE","PATCH","HEAD"];
     authenticationMethod: Array<string> = ["None","Token","Password"];
     contentTypes:Array<string> = ["text/plain","application/octet-stream","application/json",];
     submitted:boolean = false;
     cform: FormGroup;
     uniqueUrls:string[]
-    isDataAvailable:boolean = false;
+    dataFetchingTried:boolean = false;
     
-    constructor(private _fb: FormBuilder,private service:CrequestService) {}
+    constructor(private _fb: FormBuilder,private service:CrequestService,private _flashMessagesService: FlashMessagesService) {}
 
+    passwordMatchValidator(){
+	;
+    }
+    
     buildForm():void{
 	console.log("inside buildform")
 	
@@ -46,6 +53,7 @@ export class FormComponent {
 	event.preventDefault();
 	this.submitted = true;
 	console.log('submitting form value for request:',JSON.stringify(this.cform.value,null,4));
+
 	this.service.initRequest(this.cform.value)
 	    .subscribe(
 		response => {
@@ -54,26 +62,35 @@ export class FormComponent {
 		},
 		err => {
 		    this.cform.value['response'] = JSON.stringify(err,null,4);
+		    
 		});
 
 	this.service.saveReqParams(this.cform.value)
     };
 
-    passwordMatchValidator(){
-	;
+    displayFlash(msg){
+	
     }
-
+    
     initForm(){
 	let me = this;
 	this.service.fetchUniqueUrls()
 	    .subscribe(
 		response => {
+
 		    me.uniqueUrls = response.urlList
 		},
-		err => console.error(err),
+		err => {
+		    console.error("error in fetching urls:",err);
+		    console.log(this._flashMessagesService);
+		    me.buildForm()
+		    me.dataFetchingTried = true;
+		    this._flashMessagesService.show('MongoDb Cache server is offline. No request will be stored', { cssClass: 'alert-danger', timeout: 2000 });
+		},
 		() => {
 		    me.buildForm()
-		    me.isDataAvailable = true;		    
+		    me.dataFetchingTried = true;
+		    this._flashMessagesService.show('Connected to MongoDb Cache server. ', { cssClass: 'alert-info', timeout: 2000 });
 		}
 		
 	    )
