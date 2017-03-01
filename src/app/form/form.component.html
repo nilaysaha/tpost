@@ -75,11 +75,6 @@
 	    <button type="submit" class="btn btn-primary" [disabled]="cform.status != 'VALID'">Submit</button>
 	    <br/>
 	    <br/>
-	    <div class="alert alert-success" role="alert">
-	      <p>Value: {{ cform.value | json }}</p>
-	      <p>Validation status: {{ cform.status }}</p>
-	      <p>showPayload:{{showPayload}} {{cform.value.method}}</p>
-	    </div>      
 	  </form>
 	</div>
       </div>
@@ -93,7 +88,18 @@
 	  <div class="form-group">
 	    <textarea class="form-control" id="txtbox" formrows="3">{{cform.value.response}}</textarea>
 	  </div>    
-	</div>  
+	</div>
+      </div>
+      <p></p>
+      <div class="card">
+	<div class="card-header">
+	  Error From the Curl Request:
+	</div>
+	<div class="card-block">
+	  <div class="form-group">
+	    <textarea class="form-control" id="txtbox" formrows="3">{{cform.value.error}}</textarea>
+	  </div>    
+	</div>
       </div>
     </div>
   </div>

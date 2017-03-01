@@ -24,6 +24,7 @@ export class FormComponent {
     cform: FormGroup;
     uniqueUrls:string[]
     dataFetchingTried:boolean = false;
+    responseHeaders:any;
     
     constructor(private _fb: FormBuilder,private service:CrequestService,private _flashMessagesService: FlashMessagesService) {}
 
@@ -54,17 +55,22 @@ export class FormComponent {
 	this.submitted = true;
 	console.log('submitting form value for request:',JSON.stringify(this.cform.value,null,4));
 
-	this.service.initRequest(this.cform.value)
-	    .subscribe(
-		response => {
-		    console.log("response has been subscribed. Value is:",JSON.stringify(response,null,4));
-		    this.cform.value['response'] = JSON.stringify(response,null,4);
-		},
-		err => {
-		    this.cform.value['response'] = JSON.stringify(err,null,4);
-		    
-		});
+	try {
+	    this.service.initRequest(this.cform.value)
+		.subscribe(
+		    response => {
+			console.log("response has been subscribed. Value is:",JSON.stringify(response,null,4));
+			this.cform.value['response'] = JSON.stringify(response,null,4);
+		    },
+		    err => {
+			this.cform.value['error'] = JSON.stringify(err,null,4);
+		    });
 
+	}	
+	catch(err){
+	    this.cform.value['error'] = JSON.stringify(err,null,4);	    
+	}
+	
 	this.service.saveReqParams(this.cform.value)
     };
 

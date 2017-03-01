@@ -15,25 +15,6 @@ export class CrequestService{
 	return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     }
     
-    private handleError(error: Response| any ){
-	// In a real world app, we might use a remote logging infrastructure
-	let errMsg: string;
-
-	console.error('error in http request:',error);
-	
-	if (error instanceof Response) {
-	    const body = error.json() || '';
-	    const err = body.error || JSON.stringify(body);
-	    errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-	}
-	else
-	{
-	    errMsg = error.message ? error.message : error.toString();
-	}
-	console.error(errMsg);
-	return Observable.throw(errMsg);
-    }
-
     private extractData(res: Response){
 	console.log("returned after request.");
 	let body = res.json();
@@ -41,17 +22,12 @@ export class CrequestService{
 	return body || { };	
     }
 
-    private handleResponse(error:Response| any){
-	console.log('handling response:',error);
-    }
-    
     private execRequest(request:any): Observable<any> {
 	console.log('executing request with options:',request);
 	console.log('http module details:',this.http);
 	
 	return this.http.request(request)
 	    .map(this.extractData)
-            .catch(this.handleError);    
     }
     
     initRequest(reqParams:any):any {

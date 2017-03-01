@@ -15,11 +15,13 @@ import {CrequestService} from './services/crequest/crequest.service';
 import { AuthenticateComponent } from './authenticate/authenticate.component';
 import { PagenotfoundComponent } from './pagenotfound/pagenotfound.component';
 import { MainPageComponent } from './main-page/main-page.component';
+import { RegisterComponent } from './register/register.component';
 
 const appRoutes: Routes = [
     { path:'', component: MainPageComponent},
     { path: 'request',component: FormComponent },
     { path:'login',component: AuthenticateComponent},
+    { path:'register',component: RegisterComponent},
     { path: '**', component: PagenotfoundComponent }
 ];
 
@@ -30,7 +32,8 @@ const appRoutes: Routes = [
 	FormComponent,
 	AuthenticateComponent,
 	PagenotfoundComponent,
-	MainPageComponent
+	MainPageComponent,
+	RegisterComponent
     ],
     imports: [
 	RouterModule.forRoot(appRoutes),
